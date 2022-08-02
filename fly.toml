@@ -1,13 +1,13 @@
-app = "vpn"
+app = "alexvpn"
 kill_signal = "SIGINT"
 kill_timeout = 5
 
 [deploy]
-  strategy = "rolling"
   max-per-region = 1
+  strategy = "rolling"
 
 [env]
-  PORT = "41641"
+  PORT = "8080"
 
 [experimental]
   auto_rollback = false
@@ -19,3 +19,7 @@ kill_timeout = 5
 
   [[services.ports]]
     port = "41641"
+
+[[statics]]
+  guest_path = "/app/public"
+  url_prefix = "/static/"
