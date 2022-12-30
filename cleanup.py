@@ -23,12 +23,14 @@ API_TAILNET_ENDPOINT = f"{API_ENDPOINT}/tailnet/{TS_API_DOMAIN}"
 FLY_IO_REGIONS = {
     "ams": ("Amsterdam, Netherlands", True),
     "cdg": ("Paris, France", True),
+    "den": ("Denver, CO, USA", True),
     "dfw": ("Dallas, TX, USA", True),
     "ewr": ("Secaucus, NJ, USA", False),
     "fra": ("Frankfurt, Germany", True),
     "gru": ("Sao Paulo, Brazil", False),
     "hkg": ("Hong Kong, China", True),
     "iad": ("Ashburn, VA, USA", False),
+    "jnb": ("Johannesburg, South Africa", False),
     "lax": ("Los Angeles, CA, USA", True),
     "lhr": ("London, United Kingdom", True),
     "maa": ("Chennai, India", True),
@@ -57,9 +59,12 @@ def get_fly_io_exit_routes() -> dict:
     devices = {}
 
     for device in response["devices"]:
-        # Only match machines both have expected ACL tag and is in Fly.io region.
-        if TS_TAG in device["tags"] and device["hostname"][-3:] in FLY_IO_REGIONS:
-            devices[device["hostname"]] = device["id"]
+        try:
+            # Only match machines both have expected ACL tag and is in Fly.io region.
+            if TS_TAG in device["tags"] and device["hostname"][-3:] in FLY_IO_REGIONS:
+                devices[device["hostname"]] = device["id"]
+        except KeyError:
+            pass
 
     return devices
 
